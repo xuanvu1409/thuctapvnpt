@@ -1,0 +1,48 @@
+<?php
+
+// terminal
+
+const RUN_PORT = 8200;
+
+const OS_UNKNOWN = 1;
+const OS_WIN = 2;
+const OS_LINUX = 3;
+const OS_OSX = 4;
+
+
+if(isset($argv[1])) {
+    // main cmd
+
+    switch($argv[1]) {
+        case 's':
+        case '-s':
+            $os = getOS();
+
+            // for windows
+            $cmd = 'start';
+
+            if($os == OS_OSX) {
+                // for macosx
+                $cmd = 'open';
+            } else if($os == OS_LINUX) {
+                // for linux
+                $cmd = 'xdg-open';
+            }
+
+            exec('php -S localhost:'.RUN_PORT.' '.__DIR__.'/public/index.php | '.$cmd.' http://localhost:'.RUN_PORT);
+        break;
+    }
+
+} else {
+    echo file_get_contents('README.md');
+}
+
+
+function getOS() {
+    switch (true) {
+        case stristr(PHP_OS, 'DAR'): return OS_OSX;
+        case stristr(PHP_OS, 'WIN'): return OS_WIN;
+        case stristr(PHP_OS, 'LINUX'): return OS_LINUX;
+        default : return OS_UNKNOWN;
+    }
+}

@@ -1,0 +1,152 @@
+<p-toast></p-toast>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header card-header-rose card-header-text">
+          <div class="card-text">
+            <h4 class="card-title">Hồ sơ</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="ml-auto mr-auto">
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <div class="fileinput-new thumbnail img-circle">
+<!--                    <img *ngIf="!User.avatar" src="assets/img/placeholder.jpg">-->
+<!--                    <img *ngIf="User.avatar" [src]="createImg(User.avatar)">-->
+                    <img *ngIf="User.avatar" src="{{User.avatar | getImage}}">
+                  </div>
+                  <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                  <div>
+                    <span class="btn btn-round btn-rose btn-file">
+                      <span class="fileinput-new">Chọn ảnh</span>
+                      <span class="fileinput-exists">Thay đổi</span>
+                      <input type="file" accept="image/*" (change)="readFileUpload($event.target.files)"/>
+                    </span>
+                    <br/>
+                    <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput">
+                      <i class="fa fa-times"></i>Xóa
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Họ tên</label>
+                  <input type="text" class="form-control" formControlName="ho_ten">
+                  <div *ngIf="submitted && form.controls.ho_ten.errors">
+                    <small class="error" *ngIf="form.controls.ho_ten.errors.required">Chưa nhập họ tên.</small>
+                    <small class="error" *ngIf="form.controls.ho_ten.errors.minlength">Họ tên không được dưới 8 ký tự.</small>
+                    <small class="error" *ngIf="form.controls.ho_ten.errors.minlength">Họ tên không được trên 50 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="text" class="form-control" formControlName="email">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="bmd-label-static">Số điện thoại</label>
+                  <input type="text" class="form-control" formControlName="so_dien_thoai">
+                  <div *ngIf="submitted && form.controls.so_dien_thoai.errors">
+                    <small class="error" *ngIf="form.controls.so_dien_thoai.errors.required">Chưa nhập số điện thoại.</small>
+                    <small class="error" *ngIf="form.controls.so_dien_thoai.errors.pattern">Số điện thoại không hợp lệ</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Ngày sinh</label>
+                  <input type="text" formControlName="ngay_sinh" [bsConfig]="datetimePicker" class="form-control" bsDatepicker>
+                  <div *ngIf="submitted && form.controls.ngay_sinh.errors">
+                    <small class="error" *ngIf="form.controls.ngay_sinh.errors.required">Chưa nhập ngày sinh.</small>
+                    <small class="error" *ngIf="form.controls.ngay_sinh.errors.minlength">Ngày sinh không hợp lệ.</small>
+                    <small class="error" *ngIf="form.controls.ngay_sinh.errors.maxlength">Ngày sinh không hợp lệ.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row-md-12">
+              <div class="form-group">
+                <label>Địa chỉ cụ thể</label>
+                <input type="text" class="form-control" formControlName="dia_chi">
+                <div *ngIf="submitted && form.controls.dia_chi.errors">
+                  <small class="error" *ngIf="form.controls.dia_chi.errors.required">Chưa nhập địa chỉ.</small>
+                  <small class="error" *ngIf="form.controls.dia_chi.errors.minlength">Địa chỉ không được dưới 2 ký tự.</small>
+                  <small class="error" *ngIf="form.controls.dia_chi.errors.maxlength">Địa chỉ không được trên 150 ký tự.</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}" >
+                    <mat-label>Tỉnh, thành phố</mat-label>
+                    <mat-select formControlName="city" (selectionChange)="getDistrict($event.value)">
+                      <mat-option *ngFor="let item of listProvince" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}" >
+                    <mat-label>Quận, huyện</mat-label>
+                    <mat-select formControlName="district" (selectionChange)="getCommune($event.value)">
+                      <mat-option *ngFor="let item of listDistrict" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}" >
+                    <mat-label>Xã, phường, thị trấn</mat-label>
+                    <mat-select formControlName="commune">
+                      <mat-option *ngFor="let item of listCommune" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <small class="error" *ngIf="submitted && form.controls.commune.errors?.required">Chưa chọn xã, phường, thị trấn.</small>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-rose pull-right">Cập nhật</button>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-profile">
+        <div class="card-avatar">
+          <img class="img" src="{{ User.avatar | getImage }}"/>
+        </div>
+        <div class="card-body">
+          <h6 class="card-category text-gray" *ngIf="User.role == 1">Công dân</h6>
+          <h6 class="card-category text-gray" *ngIf="User.role == 2">Cán bộ</h6>
+          <h6 class="card-category text-gray" *ngIf="User.role == 3">Admin</h6>
+          <h4 class="card-title text-uppercase">{{User.ho_ten}}</h4>
+          <p class="card-description">
+            VNPT-IT Nguyễn Phong Sắc
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,175 @@
+<p-toast></p-toast>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-rose card-header-icon">
+          <div class="card-icon">
+            <i class="material-icons">travel_explore</i>
+          </div>
+          <h4 class="card-title" style="text-transform: uppercase;">
+            Quản lý lĩnh vực
+            <button type="button" (click)="create()" class="btn btn-primary btn-add float-right">
+              <i class="material-icons">add</i>
+            </button>
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Code</th>
+                <th>Tên lĩnh vực</th>
+                <th>Hình ảnh</th>
+                <th>Trạng thái</th>
+                <th class="text-right">Hành động</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of listFeild; index as i">
+                <td class="text-center">{{i+1}}</td>
+                <td>{{item.code}}</td>
+                <td>{{item.ten_linh_vuc}}</td>
+                <td>
+                  <img style="height: 40px" *ngIf="item.hinh_anh" src="{{item.hinh_anh | getImage}}" alt="">
+                </td>
+                <td>
+                  <div class="togglebutton">
+                    <label>
+                      <input type="checkbox" (change)="status($event)" value="{{item.id}}" [checked]="item.deleted_at == null">
+                      <span class="toggle"></span>
+                    </label>
+                  </div>
+                </td>
+                <td class="td-actions text-right">
+                  <button type="button" (click)="edit(item.id)" class="btn btn-warning mr-1">
+                    <i class="material-icons">edit</i>
+                  </button>
+                  <button type="button" (click)="delete(item.id)" class="btn btn-danger">
+                    <i class="material-icons">close</i>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <p-paginator [rows]="rows" totalRecords="{{totalRecords}}" (onPageChange)="loadData($event)"></p-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Classic Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="modal-header pb-0">
+          <h4 class="modal-title card-title"
+              style="text-transform: uppercase">{{ aoe ? "Thêm lĩnh vực" : "Sửa lĩnh vực" }}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body ">
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Tên lĩnh vực <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="ten_linh_vuc">
+                  <div *ngIf="submitted && form.controls.ten_linh_vuc.errors">
+                    <small class="error" *ngIf="form.controls.ten_linh_vuc.errors.required">Chưa nhập tên lĩnh vực.</small>
+                    <small class="error" *ngIf="form.controls.ten_linh_vuc.errors.maxlength">Tên lĩnh vực không được lớn hơn 200 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Mã code <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="code">
+                  <div *ngIf="submitted && form.controls.code.errors">
+                    <small class="error" *ngIf="form.controls.code.errors.required">Chưa nhập mã code.</small>
+                    <small class="error" *ngIf="form.controls.code.errors.maxlength">Mã code không được lớn hơn 255 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Mô tả</label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="mo_ta">
+                  <div *ngIf="submitted && form.controls.mo_ta.errors">
+                    <small class="error" *ngIf="form.controls.mo_ta.errors.maxlength">Mô tả không được lớn hơn 250 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Tên icon</label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="icon">
+                  <small>Hỗ trợ: <a href="https://fontawesome.com/icons?d=gallery" target="_blank">Font Awesome</a>, <a href="https://www.flaticon.com/" target="_blank">Flaticon</a>, <a href="https://themify.me/themify-icons" target="_blank">Themify</a></small>
+                  <div *ngIf="submitted && form.controls.icon.errors">
+                    <small class="error" *ngIf="form.controls.icon.errors.required">Chưa nhập tên icon.</small>
+                    <small class="error" *ngIf="form.controls.icon.errors.maxlength">Icon không được lớn hơn 250 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Cơ quan <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}">
+                    <mat-label>Chọn cơ quan</mat-label>
+                    <mat-select formControlName="co_quan" multiple>
+                      <mat-option *ngFor="let item of listOrgan" [value]="item.id">{{item.ten_co_quan}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Hình ảnh <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <div class="fileinput-new thumbnail">
+                    <img src="{{ image }}" id="#img_demo" alt="...">
+                  </div>
+                  <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                  <div>
+                    <span class="btn btn-rose btn-round btn-file">
+                      <span class="fileinput-new">Chọn ảnh</span>
+                      <span class="fileinput-exists">Đổi ảnh</span>
+                      <input type="file" name="..." (change)="readFileUpload($event.target.files)"/>
+                    </span>
+                    <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i
+                      class="fa fa-times"></i> Xóa</a>
+                  </div>
+                  <div >
+                  </div>
+                </div>
+                <div *ngIf="submitted && !image">
+                  <small class="text-danger w-100">Chưa chọn ảnh.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer pt-0">
+            <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--  End Modal -->
+</div>

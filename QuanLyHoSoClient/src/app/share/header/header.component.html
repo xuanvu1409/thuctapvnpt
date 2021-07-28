@@ -1,0 +1,130 @@
+<header class="header-one">
+    <!-- Start header top bar -->
+    <div class="topbar-area">
+        <div class="container">
+            <div class="row">
+                <div class=" col-md-6 col-sm-6 col-xs-12">
+                    <div class="topbar-left">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-envelope"></i> info@bultifor.com</a></li>
+                            <li><a href="#"><i class="fa fa-clock-o"></i> Live support</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End header top bar -->
+    <!-- Start header menu area -->
+    <div id="sticker" class="header-area hidden-xs">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="row">
+                        <!-- logo start -->
+                        <div class="col-md-3 col-sm-3">
+                            <div class="logo">
+                                <!-- Brand -->
+                                <a class="navbar-brand page-scroll" [routerLink]="['/']">
+                                    <img src="assets/img/logo/logo2.png" alt="">
+                                </a>
+                            </div>
+                            <!-- logo end -->
+                        </div>
+                        <div class="col-md-9 col-sm-9">
+                            <div class="header-right-link">
+                                <!-- search option end -->
+                                <a *ngIf="!user" class="s-menu" [routerLink]="['/login']">Đăng nhập</a>
+
+                                <div class="dropdown" *ngIf="user">
+                                    <a class="circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <img src="{{user.avatar | getImage}}" alt="Braden Hamm">
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a [routerLink]="['/profile']" >Thông tin</a></li>
+                                        <li><a style="cursor: pointer;" (click)="logOut()">Đăng xuất</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- mainmenu start -->
+                            <nav class="navbar navbar-default">
+                                <div class="collapse navbar-collapse" id="navbar-example">
+                                    <div class="main-menu">
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li><a [routerLink]="['/']">Trang chủ</a></li>
+                                            <li><a [routerLink]="['/list']">Thủ tục</a></li>
+                                          <li><a [routerLink]="['/search-profile']">Tra cứu</a></li>
+                                            <li><a >Liên hệ</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                            <!-- mainmenu end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End header menu area -->
+    <!-- Start mobile menu area -->
+    <div class="mobile-menu-area hidden-lg hidden-md hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mobile-menu">
+                        <div class="logo">
+                            <a href="index-2.html"><img src="assets/img/logo/logo2.png" alt="" /></a>
+                        </div>
+                        <nav id="dropdown">
+                            <ul>
+                                <li><a class="pages" href="index-2.html">Home</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="index-2.html">Home 01</a></li>
+                                        <li><a href="index-3.html">Home 02</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="about.html">About us</a></li>
+                                <li><a class="pages" href="#">Pages</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="team.html">team</a></li>
+                                        <li><a href="faq.html">FAQ</a></li>
+                                        <li><a href="pricing.html">Pricing</a></li>
+                                        <li><a href="review.html">Reviews</a></li>
+                                        <li><a href="terms.html">Terms & Conditions</a></li>
+                                        <li><a href="login.html">Login</a></li>
+                                        <li><a href="signup.html">Register</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="pages" href="#">Dashboard</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="a-dashboard.html">Dashboard</a></li>
+                                        <li><a href="a-send-money.html">Send Money</a></li>
+                                        <li><a href="a-request-money.html">Request Money</a></li>
+                                        <li><a href="a-withdraw-money.html">Withdraw Money</a></li>
+                                        <li><a href="a-deposite-money.html">Deposite Money</a></li>
+                                        <li><a href="a-currency-change.html">Currency Exchange</a></li>
+                                        <li><a href="a-add-bank.html">Bank Account</a></li>
+                                        <li><a href="a-card-number.html">Card Number</a></li>
+                                        <li><a href="a-transection-log.html">Transection Log</a></li>
+                                        <li><a href="a-setting-money.html">Notifications</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="pages" href="#">Blog</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="blog.html">Blog grid</a></li>
+                                        <li><a href="blog-sidebar.html">Blog Sidebar</a></li>
+                                        <li><a href="blog-details.html">Blog Details</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="contact.html">contacts</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End mobile menu area -->
+</header>

@@ -1,0 +1,225 @@
+<p-toast></p-toast>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-rose card-header-icon">
+          <div class="card-icon">
+            <i class="material-icons">apartment</i>
+          </div>
+          <h4 class="card-title" style="text-transform: uppercase;">
+            Quản lý cơ quan
+            <button type="button" (click)="create()" class="btn btn-primary btn-add float-right">
+              <i class="material-icons">add</i>
+            </button>
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Code</th>
+                <th>Tên cơ quan</th>
+                <th>Hình ảnh</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Địa chỉ</th>
+                <th>Trạng thái</th>
+                <th class="text-right">Hành động</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of listOrgan; index as i">
+                <td class="text-center">{{i+1}}</td>
+                <td>{{item.code}}</td>
+                <td>{{item.ten_co_quan}}</td>
+                <td>
+                  <img style="height: 40px" *ngIf="item.hinh_anh" src="{{item.hinh_anh | getImage}}" alt="">
+                </td>
+                <td>{{item.so_dien_thoai}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.dia_chi}}</td>
+                <td>
+                  <div class="togglebutton">
+                    <label>
+                      <input type="checkbox" (change)="status($event)" value="{{item.id}}" [checked]="item.deleted_at == null">
+                      <span class="toggle"></span>
+                    </label>
+                  </div>
+                </td>
+                <td class="td-actions text-right">
+                  <button type="button" (click)="edit(item.id)" class="btn btn-warning mr-1">
+                    <i class="material-icons">edit</i>
+                  </button>
+                  <button type="button" (click)="delete(item.id)" class="btn btn-danger">
+                    <i class="material-icons">close</i>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <p-paginator [rows]="rows" totalRecords="{{totalRecords}}" (onPageChange)="loadData($event)"></p-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Classic Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="modal-header pb-0">
+          <h4 class="modal-title card-title"
+              style="text-transform: uppercase">{{ aoe ? "Thêm cơ quan" : "Sửa cơ quan" }}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body ">
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Tên cơ quan <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="ten_co_quan">
+                  <div *ngIf="submitted && form.controls.ten_co_quan.errors">
+                    <small class="error" *ngIf="form.controls.ten_co_quan.errors.required">Chưa nhập tên cơ quan.</small>
+                    <small class="error" *ngIf="form.controls.ten_co_quan.errors.maxlength">Tên cơ quan không được lớn hơn 255 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Mã code <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="code">
+                  <div *ngIf="submitted && form.controls.code.errors">
+                    <small class="error" *ngIf="form.controls.code.errors.required">Chưa nhập mã code.</small>
+                    <small class="error" *ngIf="form.controls.code.errors.maxlength">Mã code không được lớn hơn 255 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Email <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="email">
+                  <div *ngIf="submitted && form.controls.email.errors">
+                    <small class="error" *ngIf="form.controls.email.errors.required">Chưa nhập email.</small>
+                    <small class="error" *ngIf="form.controls.email.errors.email">Email không hợp lệ.</small>
+                    <small class="error" *ngIf="form.controls.email.errors.maxlength">Email không được lớn hơn 100 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Số điện thoại <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="so_dien_thoai">
+                  <div *ngIf="submitted && form.controls.so_dien_thoai.errors">
+                    <small class="error" *ngIf="form.controls.so_dien_thoai.errors.required">Chưa nhập số điện thoại.</small>
+                    <small class="error" *ngIf="form.controls.so_dien_thoai.errors.pattern">Số điện thoại không hợp lệ.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Địa chỉ cụ thể <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <input class="form-control" type="text" formControlName="dia_chi">
+                  <div *ngIf="submitted && form.controls.dia_chi.errors">
+                    <small class="error" *ngIf="form.controls.dia_chi.errors.maxlength">Địa chỉ không được lớn hơn 255 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-1">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <mat-form-field appearance="standard">
+                    <mat-label>Tỉnh, thành phố <span class="text-danger">*</span></mat-label>
+                    <mat-select formControlName="city" (selectionChange)="getDistrict($event.value)">
+                      <mat-option *ngFor="let item of listCity" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}">
+                    <mat-label>Quận, huyện <span class="text-danger">*</span></mat-label>
+                    <mat-select formControlName="district" (selectionChange)="getCommune($event.value)">
+                      <mat-option *ngFor="let item of listDistrict" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}">
+                    <mat-label>Xã, phường, thị trấn <span class="text-danger">*</span></mat-label>
+                    <mat-select formControlName="commune">
+                      <mat-option *ngFor="let item of listCommune" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Lĩnh vực <span class="text-danger">*</span></label>
+              <div class="col-sm-8">
+                <div class="form-group bmd-form-group">
+                  <mat-form-field appearance="standard" [style]="{'width': '100%'}">
+                    <mat-label>Chọn lĩnh vực</mat-label>
+                    <mat-select formControlName="linh_vuc" multiple>
+                      <mat-option *ngFor="let item of listFeild" [value]="item.id">{{item.ten_linh_vuc}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4 col-form-label">Hình ảnh</label>
+              <div class="col-sm-8">
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <div class="fileinput-new thumbnail">
+                    <img src="{{image}}" id="#img_demo" alt="...">
+                  </div>
+                  <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                  <div>
+                          <span class="btn btn-rose btn-round btn-file">
+                            <span class="fileinput-new">Chọn ảnh</span>
+                            <span class="fileinput-exists">Đổi ảnh</span>
+                            <input type="file" name="..." (change)="readFileUpload($event.target.files)"/>
+                          </span>
+                    <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i
+                      class="fa fa-times"></i> Xóa</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer pt-0">
+            <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!--  End Modal -->

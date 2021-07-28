@@ -1,0 +1,201 @@
+<p-toast></p-toast>
+<!-- Start breadcrumbs area -->
+<div class="page-area">
+  <div class="breadcumb-overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="breadcrumb text-center">
+          <div class="section-headline white-headline text-center">
+            <h3>Terms & Conditions</h3>
+          </div>
+          <ul>
+            <li class="home-bread">Home</li>
+            <li>Terms & Conditions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End breadcrumbs area -->
+<!-- Start terms area -->
+<div class="terms-area bg-color area-padding-2">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="section-headline text-center">
+          <h3>Quy trình thực hiện nộp hồ sơ</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Start Column Start -->
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="true">
+        </p-steps>
+        <div *ngIf="activeIndex == 0">
+          <div class="col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10 col-xs-12 mt-3">
+            <div class="login-form">
+              <h4 class="login-title text-center">ĐĂNG NHẬP</h4>
+              <div class="row">
+                <form [formGroup]="formLogin" (ngSubmit)="login()" class="log-form">
+                  <div class="col-md-offset-2 col-sm-offset-2 col-md-8 col-sm-8 col-xs-12 mb-3">
+                    <input formControlName="email" type="text" class="form-control" placeholder="Nhập email..." required>
+                    <div *ngIf="sumittedLo && formLogin.controls.email.errors">
+                      <div class="text-danger" *ngIf="formLogin.controls.email.errors.required">Chưa nhập email.</div>
+                      <div class="text-danger" *ngIf="formLogin.controls.email.errors.email">Email không đúng định dạng.</div>
+                      <div class="text-danger" *ngIf="formLogin.controls.email.errors.minlength">Email không được nhỏ hơn 8 ký tự.</div>
+                      <div class="text-danger" *ngIf="formLogin.controls.email.errors.maxlength">Email không được lớn hơn 50 ký tự.</div>
+                    </div>
+                  </div>
+                  <div class="col-md-offset-2 col-sm-offset-2 col-md-8 col-sm-8 col-xs-12 mb-3">
+                    <input formControlName="mat_khau" type="password" class="form-control" placeholder="Nhập mật khẩu..." required>
+                    <div *ngIf="sumittedLo && formLogin.controls.mat_khau.errors">
+                      <div class="text-danger" *ngIf="formLogin.controls.mat_khau.errors.required">Chưa nhập mật khẩu.</div>
+                      <div class="text-danger" *ngIf="formLogin.controls.mat_khau.errors.minlength">Mật khẩu không được dưới 8 ký tự.</div>
+                      <div class="text-danger" *ngIf="formLogin.controls.mat_khau.errors.maxlength">Mật khẩu không được trên 50 ký tự.</div>
+                      <div class="text-danger" *ngIf="formLogin.controls.mat_khau.errors.pattern">Mật khẩu không đúng định dạng.</div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                    <div class="clear"></div>
+                    <div class="separetor text-center"><span>Hoặc đăng nhập với</span></div>
+                    <div class="sign-icon">
+                      <ul>
+                        <li><a class="facebook" href="#"><i class="ti-facebook"></i></a></li>
+                        <li><a class="twitter" href="#"><i class="ti-twitter"></i></a></li>
+                        <li><a class="google" href="#"><i class="ti-google"></i></a></li>
+                      </ul>
+                      <div class="acc-not">Bạn chưa có tài khoản? <a [routerLink]="['/register']">Đăng ký ngay!</a></div>
+                    </div>
+                  </div>
+                  <button type="submit" class="float-right btn btn-primary">Tiếp theo
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex == 1">
+          <div class="send-money-form mt-3">
+            <div class="form-text">
+              <h4 class="form-top">Chọn trường hợp hồ sơ</h4>
+              <div class="form-inner" style="padding: 30px 50px 90px 50px">
+                <div class="row">
+                  <div class="col-md-offset-3 col-sm-3 col-md-6 col-sm-6 col-xs-12">
+                    <select nice-select (change)="getTemplate($event.target.value)">
+                      <option value="">-- Chọn quy trình --</option>
+                      <option *ngFor="let item of listProcedure" value="{{item.id}}">{{item.ten_quy_trinh}}</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="button" class="float-right btn btn-primary"
+                        [disabled]="!id_quy_trinh" (click)="nextTab()">Tiếp theo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex == 2">
+          <div class="send-money-form mt-3">
+            <div class="form-text">
+              <h4 class="form-top">Thông tin người nộp hồ sơ</h4>
+              <div class="form-inner" style="padding: 30px 50px 90px 50px">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+                  <div class="row">
+                    <div *ngFor="let item of template" class="{{item.class}}">
+                      <label class="w-100">{{item.title}}</label>
+                      <ng-container [ngSwitch]="item.type">
+                        <input *ngSwitchCase="'text'" type="text" [formControlName]="item.name" class="form-control"
+                               placeholder="{{item.title}}">
+                        <input *ngSwitchCase="'email'" type="email" [formControlName]="item.name" class="form-control"
+                               placeholder="{{item.title}}">
+                        <input *ngSwitchCase="'phone_number'" type="text" [formControlName]="item.name"
+                               class="form-control" placeholder="{{item.title}}">
+                        <input *ngSwitchCase="'file'" (change)="readFileUpload($event.target.files)" type="file"
+                               style="padding: calc(55px/3)" [formControlName]="item.name" class="form-control"
+                               placeholder="{{item.title}}" multiple>
+                        <p-calendar *ngSwitchCase="'date'" [formControlName]="item.name"
+                                    [style]="{'width': '100%', 'height': '55px', 'border': '1px solid white', 'border-radius': '4px'}"
+                                    [inputStyle]="{'background-color': '#1B2654', 'font-size': '14px'}"
+                                    placeholder="Ngày sinh" dateFormat="dd/mm/yy">
+                        </p-calendar>
+                        <textarea *ngSwitchCase="'longtext'" style="height: 150px" class="form-control"
+                                  [formControlName]="item.name"></textarea>
+                        <select nice-select *ngSwitchCase="'select'"
+                                (change)="changeSelect($event.target.value, item.name)" [formControlName]="item.name">
+                          <option value="">-- {{item.title}} --</option>
+                          <option *ngFor="let i of item.value ? item.value : []" value="{{i.id}}">{{i.name}}</option>
+                        </select>
+                        <ng-container *ngIf="submitted && form.controls[item.name].errors">
+                          <small class="text-danger" *ngFor="let i of item.validate">
+                            <ng-container *ngIf="form.controls[item.name].errors[i.name]">
+                              {{i.message}}
+                            </ng-container>
+                          </small>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <button type="button" [disabled]="listProcedure.length == 1" class="float-left btn btn-primary" (click)="previousTab()">Quay lại
+                      </button>
+                      <button type="submit" [disabled]="form.invalid" class="float-right btn btn-primary">Nộp hồ sơ
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeIndex == 3">
+          <div class="send-money-form mt-3">
+            <div class="form-text">
+              <h4 class="form-top">Xác nhận thông tin</h4>
+              <div class="form-inner" style="padding: 30px 50px 90px 50px">
+                <div class="form-inner table-inner" style="padding: 0">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tiêu đề</th>
+                        <th>Thông tin</th>
+                      </tr>
+                    </thead>
+                    <tbody *ngIf="profile && profileDetail">
+                    <tr>
+                      <td>Mã hồ sơ</td>
+                      <td>{{profile.code}}</td>
+                    </tr>
+                    <tr>
+                      <td>Tên thủ tục</td>
+                      <td>{{profile.thu_tuc.ten_thu_tuc}}</td>
+                    </tr>
+                    <tr>
+                      <td>Thời gian nộp</td>
+                      <td>{{profile.created_at | date: 'd-M-y'}}</td>
+                    </tr>
+                    <tr>
+                      <td>Dự kiến hoàn thành</td>
+                      <td>{{profile.thoi_gian_du_kien | date: 'd-M-y'}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <a routerLink="/history"  class="float-right btn btn-primary">Xem lịch sử
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End terms area -->
